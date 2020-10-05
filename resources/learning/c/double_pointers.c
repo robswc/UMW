@@ -38,7 +38,8 @@ void print_array(char **a) {
     printf("length of arr is: %d \n", length);
     int i;
     for (i = 0; i < length; i++) {
-        printf("printing... %s (%x) \n", a[i], &a[i]);
+        printf("printing... %s (%x) \n", a[0], &a[0]);
+        ++a;
     }
 
 }
