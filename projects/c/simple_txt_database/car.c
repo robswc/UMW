@@ -58,16 +58,18 @@ int initialize_db(char *filename) {
 
 // Write db to file.
 int write_db(char *filename) {
-    FILE *fout = fopen(filename, "w+");
+    FILE *fout = fopen(filename, "w");
     if (fout == NULL) {
         printf("%s not found!", filename);
         return -1;
-    }
-    // Loop through cars, add to database.
-    for (int i; i < num_cars; i++) {
-        fprintf(fout, "%d %d %s %s %d %d\n", db[i]->carnum, db[i]->year, db[i]->make, enum_convert(db[i]->category), db[i]->miles, db[i]->cost);
+    } else {
+        // Loop through cars, add to database.
+        for (int i = 0; i < num_cars; i++) {
+            fprintf(fout, "%d %d %s %s %d %d\n", db[i]->carnum, db[i]->year, db[i]->make, enum_convert(db[i]->category), db[i]->miles, db[i]->cost);
+        }
     }
 
+    fclose(fout);
     return 0;
 
 }
