@@ -10,6 +10,9 @@ typedef struct {
     int miles;
     int cost;
 } car;
+
+void highlight_car(int car_num);
+
 int initialize_db(char *filename);
 int write_db(char *filename); 
 void show_cars();
