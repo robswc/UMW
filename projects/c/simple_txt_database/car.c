@@ -13,8 +13,8 @@ char *enum_convert(int enum_int) {
     if (enum_int == 2) {return "truck";} 
     if (enum_int == 3) {return "hybrid";}
     else {
-        printf("Cannot convert %d to enum!\n", enum_int);
-        exit(EXIT_FAILURE);
+        // printf("Cannot convert %d to enum!\n", enum_int);
+        return 0;
     }
 }
 
@@ -25,8 +25,8 @@ category enum_convert_cat(char *str_category) {
     if ((strcmp(str_category, "truck") == 0)) {return truck;} 
     if ((strcmp(str_category, "hybrid") == 0)) {return hybrid;}
     else {
-        printf("Cannot convert %s to enum!\n", str_category);
-        exit(EXIT_FAILURE);
+        // printf("Cannot convert %s to enum!\n", str_category);
+        return 0;
     }
 }
 
@@ -63,6 +63,7 @@ int write_db(char *filename) {
         printf("%s not found!", filename);
         return -1;
     }
+    // Loop through cars, add to database.
     for (int i; i < num_cars; i++) {
         fprintf(fout, "%d %d %s %s %d %d\n", db[i]->carnum, db[i]->year, db[i]->make, enum_convert(db[i]->category), db[i]->miles, db[i]->cost);
     }
@@ -71,7 +72,7 @@ int write_db(char *filename) {
 
 }
 
-// Print car
+// Prints car.
 void print_car(car *c) {
     printf("%d %d %s %s %d %d\n", c->carnum, c->year, c->make, enum_convert(c->category), c->miles, c->cost);
 }
@@ -80,6 +81,19 @@ void print_car(car *c) {
 void show_cars() {
     for (int i = 0; i < num_cars; i++) {
         print_car(db[i]);
+    }
+}
+
+// Highlights car in red text, only works on some terminals.
+void highlight_car(int car_num) {
+    for (int i = 0; i < num_cars; i++) {
+        if (i == car_num) {
+            printf("\033[0;31m");
+            print_car(db[i]);
+            printf("\033[0m"); 
+        } else {
+            print_car(db[i]);
+        }
     }
 }
 
@@ -113,6 +127,8 @@ car *add_car(int carnum, int year, char *make, category category, int miles, int
     c->cost = cost;
     db[num_cars] = c;
     num_cars++;
+
+    //Return added car.
     return db[num_cars];
 
 }
@@ -136,14 +152,14 @@ int get_year(car **cars, int year) {
     int total = 0;
     for (int i = 0; i < num_cars; i++) {
         if (db[i]->year > year) {
-            print_car(db[i]);
+            cars[total] = db[i];
             total++;
         }
     }
 
     // No results
     if (total == 0) {
-        printf("No cars newer than %d!", year);
+        printf("No cars newer than %d!\n", year);
     }
 
     return total;
@@ -156,7 +172,7 @@ int get_cost(car **cars, int cost) {
     int total = 0;
     for (int i = 0; i < num_cars; i++) {
         if (db[i]->cost < cost) {
-            print_car(db[i]);
+            cars[total] = db[i];
             total++;
         }
     }
@@ -176,7 +192,7 @@ int get_category(car **cars, category c) {
     int total = 0;
     for (int i = 0; i < num_cars; i++) {
         if (db[i]->category == c) {
-            print_car(db[i]);
+            cars[total] = db[i];
             total++;
         }
     }
@@ -197,7 +213,7 @@ int get_make(car **cars, char *make) {
     int total = 0;
     for (int i = 0; i < num_cars; i++) {
         if (!strcmp(db[i]->make, make)) {
-            print_car(db[i]);
+            cars[total] = db[i];
             total++;
         }
     }
